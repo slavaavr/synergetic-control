@@ -13,8 +13,7 @@ class NW:
         self.X = X
         self.Y = Y
         self.core = core
-        self.h = self._find_h_opt(0.000001, (X.max() - X.min()) / 2, (X.max() - X.min()) / X.shape[0])
-        print(self.h)
+        self.h = self._find_h_opt(1e-6, (X.max() - X.min()) / 2, (X.max() - X.min()) / X.shape[0])
 
     def get_h_opt(self):
         return self.h
@@ -23,15 +22,15 @@ class NW:
         return abs(x1 - x2)
 
     def _find_h_opt(self, min_h, max_h, step_h):
-        LOO_min = 1e6
+        min_loo = 1e6
         h_opt = min_h
-        arrayLOO = []
-        arrayH = np.arange(min_h, max_h, step_h)
-        for h in arrayH:
-            LOO = self._LOO(h)
-            arrayLOO.append(LOO)
-            if LOO < LOO_min:
-                LOO_min = LOO
+        arr_loo = []
+        arr_h = np.arange(min_h, max_h, step_h)
+        for h in arr_h:
+            loo = self._loo(h)
+            arr_loo.append(loo)
+            if loo < min_loo:
+                min_loo = loo
                 h_opt = h
         # plt.figure()
         # plt.plot(arrayH, arrayLOO, linewidth=2, color='blue')
@@ -41,13 +40,13 @@ class NW:
         # plt.show()
         return h_opt
 
-    def _LOO(self, h):
-        LOO = 0
+    def _loo(self, h):
+        loo = 0
         for i in range(self.X.shape[0]):
-            LOO += (self._a_h_for_LOO(self.X[i], np.delete(self.X, [i]), np.delete(self.Y, [i]), h) - self.Y[i]) ** 2
-        return LOO
+            loo += (self._a_h_for_loo(self.X[i], np.delete(self.X, [i]), np.delete(self.Y, [i]), h) - self.Y[i]) ** 2
+        return loo
 
-    def _a_h_for_LOO(self, x, X, Y, h):
+    def _a_h_for_loo(self, x, X, Y, h):
         numerator = 0
         denominator = 0
         for i in range(X.shape[0]):
