@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from marchuk.marchuk_model_states import *
 import numpy as np
 from regr.nadaray_watson import NW
+# from regr.lowess import NW
 
 
 class EquationSystem:
@@ -160,8 +161,8 @@ class EquationSystem:
 
     def train(self, epoch_count: int):
         for i in range(epoch_count):
-            print('%d) u=%e / f=%e / t0=%e / a4=%e / s=%e / a8=%e / v=%e / noise1=%e / noise=%e / c=%e' % (
-                i, self.u(), self.f, self.t0, self.a4, self.s, self.a8, self.v, self.noise_1, self.noise, self.c))
+            # print('%d) u=%e / f=%e / t0=%e / a4=%e / s=%e / a8=%e / v=%e / noise1=%e / noise=%e / c=%e' % (
+            #     i, self.u(), self.f, self.t0, self.a4, self.s, self.a8, self.v, self.noise_1, self.noise, self.c))
             self.vv.append(self.v)
             self.ff.append(self.f)
             self.uu.append(self.u())
@@ -170,7 +171,7 @@ class EquationSystem:
             if self.is_filter_enabled and i > 0:
                 nw = NW(X=np.array(self.vv), Y=np.array(self.ff))
                 f = nw.a_h(self.v)
-                print(i, '. before f=', self.f, ' after f=', f)
+                # print(i, '. before f=', self.f, ' after f=', f)
                 self.f = f
                 self.ff[-1] = self.f
 
