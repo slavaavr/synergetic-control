@@ -90,6 +90,7 @@ class EquationSystem:
     def u(self):
         tmp = -1 / self.t0 * (
                 self.z_1_0() + self.p * self.y_1() + (self.T + self.c) * self.psi() + self.c * self.T * self.psi_prev())
+        # print('z10=%e / y1=%e / psi=%e / psi_prev=%e' %(self.z_1_0(), self.y_1(), self.psi(), self.psi_prev()))
         if tmp < 0:
             tmp = 0
         elif tmp > self.u_max:
@@ -116,8 +117,7 @@ class EquationSystem:
 
     def train(self, epoch_count: int):
         for i in range(epoch_count):
-            # print('%d) u=%e / f=%e / t0=%e / a4=%e / s=%e / a8=%e / v=%e / noise1=%e / noise=%e / c=%e' % (
-            #     i, self.u(), self.f, self.t0, self.a4, self.s, self.a8, self.v, self.noise_1, self.noise, self.c))
+            # print('%d) x=%e \t y=%e \t z=%e' % (i, self.x, self.y, self.z))
             self.x_arr.append(self.x)
             self.y_arr.append(self.y)
             self.z_arr.append(self.z)
@@ -135,22 +135,23 @@ class EquationSystem:
 
 
 if __name__ == '__main__':
-    # plt.rc('font', size=14)
-    # plt.rc('axes', titlesize=14)
-    # plt.ticklabel_format(axis='y', style='sci', scilimits=(-1, 1), useMathText=True, useOffset=False)
 
     seed = 10
-    epoches = 30
+    epoches = 1000
 
     rand.seed(seed)
-    eq1 = EquationSystem(state3, is_controllable=False, is_filter_enabled=False, noise_standard_deviation=0.5)
+    eq1 = EquationSystem(state1, is_controllable=True, is_filter_enabled=False, noise_standard_deviation=0)
     eq1.train(epoches)
 
     fig = plt.figure()
     axes = Axes3D(fig)
 
     axes.scatter(eq1.x_arr, eq1.y_arr, eq1.z_arr)
+    axes.scatter(eq1.x_arr[0], eq1.y_arr[0], eq1.z_arr[0], s=50, c='red', label='start')
+    axes.scatter(eq1.x_arr[-1], eq1.y_arr[-1], eq1.z_arr[-1], s=50, c='black', label='finish')
 
-    # plt.grid()
-    # plt.tight_layout()
+    axes.set_xlabel('$X$', fontsize=20)
+    axes.set_ylabel('$Y$', fontsize=20)
+    axes.set_zlabel('$Z$', fontsize=20)
+    plt.legend()
     plt.show()
