@@ -78,7 +78,7 @@ class EquationSystem:
         u = 0.0
         if self.is_controllable:
             u = self.u()
-            print('u=', u)
+            # print('u=', u)
         return self.z_1_0() + self.t0 * (u + self.noise_1 + self.c * self.noise)
 
     def z_1_0(self):
@@ -122,10 +122,11 @@ class EquationSystem:
             self.y_arr.append(self.y)
             self.z_arr.append(self.z)
             if self.is_filter_enabled and i > 0:
-                nw = NW(X=np.array(self.z_arr), Y=np.array(self.y_arr))
-                y = nw.a_h(self.z)
-                self.y = y
-                self.y_arr[-1] = self.y
+                nw = NW(X=np.array(self.x_arr), Y=np.array(self.z_arr))
+                z = nw.a_h(self.x)
+                # print(i, '. before z=', self.z, ' after z=', z)
+                self.z = z
+                self.z_arr[-1] = self.z
             try:
                 self.epoch()
             except RuntimeError as ex:
@@ -137,10 +138,10 @@ class EquationSystem:
 if __name__ == '__main__':
 
     seed = 10
-    epoches = 1000
+    epoches = 70
 
     rand.seed(seed)
-    eq1 = EquationSystem(state1, is_controllable=True, is_filter_enabled=False, noise_standard_deviation=0)
+    eq1 = EquationSystem(state1, is_controllable=True, is_filter_enabled=True, noise_standard_deviation=1)
     eq1.train(epoches)
 
     fig = plt.figure()
