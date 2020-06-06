@@ -50,15 +50,19 @@ class EquationSystem:
     def u(self):
         if not self.is_controllable:
             return 0
-        tmp = (1 / (w2 * b) - x_desirable / (self.x * w2 * b) + a / b - self.y) / w1 + x_desirable / (
-                self.x ** 2 * w2 * b) * (
-                      a * self.x - b * self.x * self.y) - m * self.x * self.y + c * self.y
+        tmp = (self.fi_1() - w1 * (self.y - self.fi()) - self.y) / t0 - m * self.x * self.y + c * self.y
         if tmp < 0:
             tmp = 0
         elif tmp > u_max:
             tmp = u_max
         print(tmp)
         return tmp
+
+    def fi(self):
+        return (self.x - x_desirable) * (w2 + 1) / (b * self.x * t0) + a / b
+
+    def fi_1(self):
+        return (self.x_1() - x_desirable) * (w2 + 1) / (b * self.x_1() * t0) + a / b
 
     def train(self, epoch_count: int):
         for i in range(epoch_count):
@@ -74,7 +78,7 @@ class EquationSystem:
 
 if __name__ == '__main__':
     es = EquationSystem(is_controllable=True)
-    es.train(100)
+    es.train(15)
     plt.figure(1)
     plt.title("Без управления. График изменения численности")
     plt.ylabel('Численность')
