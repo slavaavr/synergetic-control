@@ -163,17 +163,25 @@ if __name__ == '__main__':
     plt.rc('axes', titlesize=14)
     plt.ticklabel_format(axis='y', style='sci', scilimits=(-1, 1), useMathText=True, useOffset=False)
 
-    rand.seed(555)
-    a = EquationSystem(fatal_state, is_controllable=True)
-    a.train(15)
-    plt.plot(a.vv, c='blue')
-    rand.seed(555)
-    b = EquationSystem(fatal_state, is_controllable=True)
-    b.enable_noise()
-    b.train(15)
-    plt.plot(b.vv, c='red')
+    seed = 10
+    epoch = 15
 
+    rand.seed(seed)
+    a = EquationSystem(sub_clinical_state, is_controllable=True)
+    a.train(epoch)
+    plt.ylabel('V[k]', rotation='horizontal', Y=1.0)
+    plt.xlabel('k, отсчеты времени')
+    plt.plot(a.vv)
     plt.grid()
+
+
+    # rand.seed(555)
+    # b = EquationSystem(fatal_state, is_controllable=True)
+    # b.enable_noise()
+    # b.train(15)
+    # plt.plot(b.vv)
+
+    plt.tight_layout()
     plt.show()
     # colors = cm.rainbow(np.linspace(0, 1, len(vv)))
     # plt.scatter(vv, ff, c=colors)

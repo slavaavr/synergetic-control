@@ -116,7 +116,7 @@ sub_clinical_params = {
     "f0": 1,
     "m0": 0,
 
-    "t0": 1,
+    "t0": .1,
     "v_desirable": 0,
     "u_max": 5,
     "m_threshold": 0.1,
