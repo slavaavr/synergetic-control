@@ -6,8 +6,8 @@ from typing import List
 
 x0 = 5
 y0 = 3
-t0 = .01
-u_max = 10
+t0 = .1
+u_max = 4
 x_desirable = 0
 a = 3
 b = 2.7
@@ -77,23 +77,27 @@ class EquationSystem:
 
 
 if __name__ == '__main__':
+    plt.rc('font', size=14)
+    plt.rc('axes', titlesize=14)
+    linewidth = 2
+
     es = EquationSystem(is_controllable=True)
     es.train(15)
     plt.figure(1)
-    plt.title("Без управления. График изменения численности")
-    plt.ylabel('Численность')
-    plt.xlabel('Время')
+    # plt.title("Без управления. График изменения численности")
+    plt.ylabel('x,y - численность')
+    plt.xlabel('t - время')
     plt.plot(es.xx)
     plt.plot(es.yy)
     plt.grid()
-    plt.legend(('Жертвы', 'Хищники'))
+    plt.legend(('антигены (жертвы)', 'антитела (хищники)'))
 
     plt.figure(2)
-    plt.title("Без управления. Фазовый портрет")
-    plt.ylabel('Хищники')
-    plt.xlabel('Жертвы')
-    plt.plot(es.xx, es.yy, label='Фазовая траектория')
-    plt.scatter(es.xx[0], es.yy[0], c='red', label='Начальное состояние')
+    # plt.title("Без управления. Фазовый портрет")
+    plt.ylabel('y - антитела (хищники)')
+    plt.xlabel('x - антигены (жертвы)')
+    plt.plot(es.xx, es.yy, linewidth=linewidth, label='фазовая траектория')
+    plt.scatter(es.xx[0], es.yy[0], s=80, c='red', label='начальное состояние')
     plt.grid()
     plt.legend()
 
